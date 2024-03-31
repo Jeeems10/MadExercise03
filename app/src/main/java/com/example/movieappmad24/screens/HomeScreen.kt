@@ -119,20 +119,18 @@ fun MovieList(
 @Composable
 fun MovieRow(
     movie: Movie,
-    onItemClick: (String) -> Unit = {}
+    onItemClick: ((String) -> Unit)? = null // Optional machen
     ){
     Card(modifier = Modifier
         .fillMaxWidth()
         .padding(5.dp)
-        .clickable {
-            onItemClick(movie.id)
-        },
+        .clickable(onClick = { onItemClick?.invoke(movie.id) }, enabled = onItemClick != null), // angepasst
         shape = ShapeDefaults.Large,
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Column {
 
-            MovieCardHeader(imageUrl = movie.images[0])
+            MovieCardHeader(imageUrl = movie.images.firstOrNull() ?: "")
 
             MovieDetails(modifier = Modifier.padding(12.dp), movie = movie)
 
@@ -144,7 +142,7 @@ fun MovieRow(
 fun MovieCardHeader(imageUrl: String) {
     Box(
         modifier = Modifier
-            .height(150.dp)
+            .height(240.dp) // geändert statt 150.dp
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {

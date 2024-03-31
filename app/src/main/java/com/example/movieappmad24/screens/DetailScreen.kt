@@ -32,7 +32,9 @@ fun DetailScreen(navController: NavController,movieId: String?) {
             )
         }
     ) {
-        Text(text = "Hello detailscreen $movieId")
+        movie?.let {
+            MovieRow(movie = it)
+        } ?: Text(text = "Movie not found")
     }
 }
 
