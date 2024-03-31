@@ -51,6 +51,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.example.movieappmad24.models.Movie
@@ -70,11 +71,11 @@ fun HomeScreen(navController: NavController) {
             )
         },
         bottomBar = {
-            NavigationBar {
+            /*NavigationBar {
                 NavigationBarItem(
                     label = { Text("Home") },
                     selected = true,
-                    onClick = { /*TODO*/ },
+                    onClick = { *//*TODO*//* },
                     icon = { Icon(
                         imageVector = Icons.Filled.Home,
                         contentDescription = "Go to home"
@@ -83,13 +84,14 @@ fun HomeScreen(navController: NavController) {
                 NavigationBarItem(
                     label = { Text("Watchlist") },
                     selected = false,
-                    onClick = { /*TODO*/ },
+                    onClick = { *//*TODO*//* },
                     icon = { Icon(
                         imageVector = Icons.Filled.Star,
                         contentDescription = "Go to watchlist"
                     )}
                 )
-            }
+            }*/
+            BottomNavigationBar(navController = navController)
         }
     ){ innerPadding ->
         MovieList(
@@ -230,6 +232,30 @@ fun MovieDetails(modifier: Modifier, movie: Movie) {
                     append(movie.plot)
                 }
             })
+        }
+    }
+}
+
+@Composable
+fun BottomNavigationBar(navController: NavController) {
+    val screens = listOf(Screen.HomeScreen, Screen.WatchlistScreen)
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    NavigationBar {
+        screens.forEach { screen ->
+            NavigationBarItem(
+                icon = { screen.icon?.let { Icon(it, contentDescription = screen.label) } },
+                label = { Text(screen.label) },
+                selected = currentDestination?.route?.startsWith(screen.route) == true,
+                onClick = {
+                    if (currentDestination?.route?.startsWith(screen.route) == true) return@NavigationBarItem
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
     }
 }
