@@ -14,14 +14,14 @@ fun Navigation() {
     val navController = rememberNavController() // create a NavController instance
 
     NavHost(navController = navController, // pass the NavController to NavHost
-        startDestination = "homescreen") {  // pass a start destination
+        startDestination = Screen.HomeScreen.route) {  // pass a start destination
 
-        composable(route = "homescreen"){   // route with name "homescreen" navigates to HomeScreen composable
+        composable(route = Screen.HomeScreen.route){   // route with name "homescreen" navigates to HomeScreen composable
             HomeScreen(navController = navController)
         }
 
         composable(
-            route = "detailscreen/{movieId}",
+            route = Screen.DetailScreen.route,
             arguments = listOf(navArgument(name = "movieId") {type = NavType.StringType})
         ) { backStackEntry ->
             DetailScreen(navController = navController,movieId = backStackEntry.arguments?.getString("movieId"))
